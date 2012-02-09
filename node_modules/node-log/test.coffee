@@ -1,0 +1,6 @@
+log = require './lib/logger'
+log.log 'testin'
+log.debug 'testin'
+log.info 'testin'
+log.warn 'testin'
+log.error 'testin'
