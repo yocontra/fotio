@@ -14,7 +14,7 @@ server.enable '404', 'api', 'static'
 
 server.set 'fileLimit', 10 * 1024 * 1024 # 10mb file size limit
 server.set 'tempDir', join __dirname, './tmp/'
-server.set 'imageDir', join __dirname, './public/img/'
+server.set 'imageDir', join __dirname, './public/uploads/'
 server.set 'images', redback.use(redis.createClient()).createHash('images')
 
 server.set 'production'

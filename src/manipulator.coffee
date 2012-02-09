@@ -17,5 +17,7 @@ module.exports =
   equalize: (path, npath, cb) -> getImage(path).equalize().write npath, (err) -> cb(err, npath)
   flip: (path, npath, cb) -> getImage(path).flip().write npath, (err) -> cb(err, npath)
   flop: (path, npath, cb) -> getImage(path).flop().write npath, (err) -> cb(err, npath)
+
   hipster: (path, npath, cb) -> getImage(path).gamma(1.7, 2.3, 1.3).write npath, (err) -> cb(err, npath)
-  washed: (path, npath, cb) -> getImage(path).gamma(2, 2, 2).write npath, (err) -> cb(err, npath)
+  hipster2: (path, npath, cb) -> getImage(path).modulate(100, 35, 100).colors().gamma(1.7, 2.3, 1.3).write npath, (err) -> cb(err, npath)
+  hipster3: (path, npath, cb) -> getImage(path).modulate(20, 70, 100).contrast(0.8).write npath, (err) -> cb(err, npath)
