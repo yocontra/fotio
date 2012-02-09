@@ -10,17 +10,17 @@ module.exports = (req, res, next, config) ->
     form.maxFieldsSize = config.get 'fileLimit'
 
     form.parse req, (err, fields, files) ->
-      return res.end "Error parsing file - #{err.message}" if err?
+      return res.end "{'error': 'Error parsing file - #{err.message}'}" if err?
       {title, filter} = fields
       {path, mime, filename, length} = files.upload
-      return res.end "Missing fields" unless title and filter and mime and filename and length and path
-      return res.end "Invalid filter" unless manipulator[filter]
-      return res.end "Invalid file" if mime.indexOf('image/') isnt 0
+      return res.end "{'error': 'Missing fields'}" unless title and filter and mime and filename and length and path
+      return res.end "{'error': 'Invalid filter'}" unless manipulator[filter]
+      return res.end "{'error': 'Invalid file'}" if mime.indexOf('image/') isnt 0
       imageDir = config.get 'imageDir'
       newfile = join imageDir, basename(path)
 
       manipulator[filter] path, newfile, (err, npath) ->
-        return res.end "Image processing error! - #{err.message}" if err?
+        return res.end "{'error': 'Image processing error! - #{err.message}'}" if err?
         images = config.get 'images'
         id = basename npath
         data =
@@ -28,10 +28,9 @@ module.exports = (req, res, next, config) ->
           path: npath
           title: title
           filter: filter
+          uploader: req.connection.remoteAddress
 
         images.add id, JSON.stringify(data), ->
-          res.statusCode = 302
-          res.setHeader 'Location', "http://#{req.headers['host']}/view?id=#{basename(path)}"
-          return res.end()
+          return res.end "{'success': 'http://#{req.headers['host']}/view?id=#{basename(path)}'}"
   else
     return res.end 'This API only accepts files!'
