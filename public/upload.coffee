@@ -4,7 +4,7 @@ manipulator = require '../src/manipulator'
 
 module.exports = (req, res, next, config) ->
   if req.method is 'POST'
-    form = new formidable.IncomingForm()
+    form = new formidable.IncomingForm
     form.keepExtensions = false
     form.uploadDir = config.get 'tempDir'
     form.maxFieldsSize = config.get 'fileLimit'
@@ -17,9 +17,9 @@ module.exports = (req, res, next, config) ->
       return res.end "{'error': 'Invalid filter'}" unless manipulator[filter]
       return res.end "{'error': 'Invalid file'}" if mime.indexOf('image/') isnt 0
       imageDir = config.get 'imageDir'
-      newfile = join imageDir, basename(path)
+      npath = join imageDir, basename(path)
 
-      manipulator[filter] path, newfile, (err, npath) ->
+      manipulator[filter] path, npath, (err) ->
         return res.end "{'error': 'Image processing error! - #{err.message}'}" if err?
         images = config.get 'images'
         id = basename npath

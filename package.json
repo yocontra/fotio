@@ -16,7 +16,8 @@
       "gm":"*",
       "redis":"*",
       "hiredis":"*",
-      "redback":"*"
+      "redback":"*",
+      "async":"*"
    },
    "script":{
      "install":"sudo pacman -S graphicsmagick libltdl"
