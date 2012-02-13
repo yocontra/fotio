@@ -4,13 +4,14 @@ slate = require 'slate'
 hogan = require 'slate-hogan'
 redis = require 'redis'
 redback = require 'redback'
+filters = require './src/manipulator'
 
 log = require 'node-log'
 log.setName 'fotio'
 
 server = slate.create()
 server.root join __dirname, './public'
-server.engine 'mustache', hogan
+server.engine 'mustache', hogan, { title: "Fot.io", filters: Object.keys filters }
 server.enable '404', 'api', 'static'
 
 server.set 'fileLimit', 10 * 1024 * 1024 # 10mb file size limit
