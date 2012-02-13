@@ -21,6 +21,7 @@ server.set 'demoImage', join __dirname, "./demo/demo"
 server.set 'demoStore', join __dirname, "./demo/"
 server.set 'production'
 
+log.info "Building demo images..."
 buildIndex server.config, (err) ->
   server.listen 8080
   log.info 'Fotio listening!'

@@ -5,9 +5,8 @@ async = require 'async'
 module.exports = (config, cb) ->
   demoImage = config.get 'demoImage'
   demoStore = config.get 'demoStore'
-  fns = []
-  for filter, transform of manipulator
-    fns.push (callback) ->
-      transform demoImage, join(demoStore, "#{filter}.png"), (err) -> callback err
-  async.waterfall fns, cb
+  processImage = (filter, call) ->
+    manipulator[filter] demoImage, join(demoStore, "#{filter}.png"), call
+
+  async.forEach Object.keys(manipulator), processImage, cb
   return

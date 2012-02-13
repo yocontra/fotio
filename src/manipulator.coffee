@@ -21,4 +21,3 @@ module.exports =
 
   hipster: (path, npath, cb) -> getImage(path).gamma(1.7, 2.3, 1.3).write npath, cb
   hipster2: (path, npath, cb) -> getImage(path).modulate(100, 35, 100).colors().gamma(1.7, 2.3, 1.3).write npath, cb
-  hipster3: (path, npath, cb) -> getImage(path).modulate(20, 70, 100).contrast(0.8).write npath, cb
