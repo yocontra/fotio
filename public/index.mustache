@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{title}}</title>
+    <!-- Mobile viewport optimization h5bp.com/ad -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.min.css" type="text/css" />
+    <!--<link rel="stylesheet/less" href="less/bootstrap.less" type="text/css" />
+    <link rel="stylesheet/less" href="less/responsive.less" type="text/css" />
+    <script src="js/less-1.2.1.min.js"></script>-->
+    <style>
+      .modal-body img { margin: 0 auto 9px; display: block; }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand">{{title}}</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active">
+                <a href="#">Filters</a>
+              </li>
+              <li>
+                <a href="#">Recent Uploads</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <ul class="thumbnails">
+          {{#filters}}
+          <li>
+            <form action="/upload" enctype="multipart/form-data" method="post">
+              <div id="{{.}}Modal" class="modal hide fade">
+                <div class="modal-header">
+                  <a class="close" data-dismiss="modal">&times;</a>
+                  <h3>Upload</h3>
+                </div>
+                <div class="modal-body">
+                  <img src="demo/{{.}}.png" alt="Kim jong il? More like kim jong chill bro">
+                  <input type="text" name="title" class="span12" placeholder="Name It...">
+                  <input type="hidden" name="filter" disabled value="{{.}}">
+                  <input type="file" class="input-file span12" name="upload">
+                </div>
+                <div class="modal-footer">
+                  <input type="submit" class="btn btn-primary" value="Upload">
+                  <a href="#" class="btn" data-dismiss="modal">Close</a>
+                </div>
+              </div>
+            </form>
+            <a href="#{{.}}Modal" class="thumbnail" data-toggle="modal">
+              <img src="demo/{{.}}.png" alt="Kim jong il? More like kim jong chill bro">
+            </a>
+          </li>
+          {{/filters}}
+        </ul>
+      </div>
+    </div>
+    <script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+  </body>
+</html>
