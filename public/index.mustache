@@ -13,7 +13,7 @@
     <script src="js/less-1.2.1.min.js"></script>-->
     <style>
       .modal-body img { margin: 0 auto 9px; display: block; }
-      .fileInput { visibility: hidden; width: 0; height: 0; }
+      #fileInput { visibility: hidden; width: 0; height: 0; }
     </style>
   </head>
   <body>
@@ -54,7 +54,7 @@
                   <img src="demo/{{.}}.png" alt="Kim jong il? More like kim jong chill bro">
                   <input type="text" name="title" class="span12" placeholder="Name It...">
                   <input type="hidden" name="filter" disabled value="{{.}}">
-                  <input type="file" id="fileInput" class="fileInput" accept="image/*" capture="camera" name="upload">
+                  <input type="file" id="fileInput" accept="image/*" capture="camera" name="upload">
                   <button id="photoSelect" class="btn btn-large btn-primary"><i class="icon-picture icon-white"></i> Select Photo</button>
                 </div>
                 <div class="modal-footer">
