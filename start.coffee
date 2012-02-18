@@ -1,5 +1,6 @@
 {join} = require 'path'
 buildIndex = require './src/buildIndex'
+buildFolders = require './src/buildFolders'
 slate = require 'slate'
 hogan = require 'slate-hogan'
 redis = require 'redis'
@@ -24,5 +25,7 @@ server.set 'production'
 
 log.info "Building demo images..."
 buildIndex server.config, (err) ->
+  log.info "Setting up folders..."
+  buildFolders server.config
   server.listen 8080
   log.info 'Fotio listening!'

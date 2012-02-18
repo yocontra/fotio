@@ -1,6 +1,6 @@
 formidable = require 'formidable'
-manipulator = require '../src/manipulator'
-{basename, join} = require 'path'
+addImage = require '../src/addImage'
+{basename} = require 'path'
 
 module.exports = (req, res, next, config) ->
   if req.method is 'POST'
@@ -14,23 +14,16 @@ module.exports = (req, res, next, config) ->
       {title, filter} = fields
       {path, mime, filename, length} = files.upload
       return res.end "{'error': 'Missing fields'}" unless title and filter and mime and filename and length and path
-      return res.end "{'error': 'Invalid filter'}" unless manipulator[filter]
       return res.end "{'error': 'Invalid file'}" if mime.indexOf('image/') isnt 0
-      imageDir = config.get 'imageDir'
-      npath = join imageDir, basename(path)
+      opt =
+        path: path
+        ip: req.connection.remoteAddress
+        filter: filter
+        title: title
 
-      manipulator[filter] path, npath, (err) ->
-        return res.end "{'error': 'Image processing error! - #{err.message}'}" if err?
-        images = config.get 'images'
-        id = basename npath
-        data =
-          relative: "#{basename(imageDir)}/#{id}"
-          path: npath
-          title: title
-          filter: filter
-          uploader: req.connection.remoteAddress
-
-        images.add id, JSON.stringify(data), ->
-          return res.end "{'success': 'http://#{req.headers['host']}/view?id=#{basename(path)}'}"
+      addImage config, opt, (err, path) ->
+        return res.end err if err?
+        console.log err, path
+        return res.end "{'success': 'http://#{req.headers['host']}/view?id=#{basename(path)}'}"
   else
-    return res.end 'This API only accepts files!'
+    return res.end()

@@ -7,6 +7,5 @@ module.exports = (config, cb) ->
   demoStore = config.get 'demoStore'
   processImage = (filter, call) ->
     manipulator[filter] demoImage, join(demoStore, "#{filter}.png"), call
-
   async.forEach Object.keys(manipulator), processImage, cb
   return
