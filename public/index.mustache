@@ -2,7 +2,6 @@
 <html>
   <head>
     <title>{{title}}</title>
-    <!-- Mobile viewport optimization h5bp.com/ad -->
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width">
@@ -26,16 +25,6 @@
             <span class="icon-bar"></span>
           </a>
           <a class="brand">{{title}}</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li class="active">
-                <a href="#">Filters</a>
-              </li>
-              <li>
-                <a href="#">Recent Uploads</a>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
@@ -44,7 +33,7 @@
         <ul class="thumbnails">
           {{#filters}}
           <li>
-            <form action="/upload" enctype="multipart/form-data" method="post">
+            <form action="/upload" enctype="multipart/form-data" id="{{.}}form" method="post">
               <div id="{{.}}Modal" class="modal hide fade">
                 <div class="modal-header">
                   <a class="close" data-dismiss="modal">&times;</a>
@@ -57,11 +46,14 @@
                   <input type="file" id="{{.}}fileInput" accept="image/*" class="fileInput" capture="camera" name="upload"/>
                   <button type="button" class="btn btn-large btn-primary" onclick="$('#{{.}}fileInput').click()">
                     <i class="icon-picture icon-white"></i> Select Photo
-                  </button>
+                  </button><br/><br/>
+                  <div class="progress progress-danger progress-striped active">
+                    <div class="bar" id= "{{.}}bar" style="width: 0%;"></div>
+                  </div>
                 </div>
                 <div class="modal-footer">
-                  <input type="submit" class="btn btn-primary" value="Upload">
-                  <a href="#" class="btn" data-dismiss="modal">Close</a>
+                  <input type="button" class="btn btn-primary" value="Upload" onclick="uploadForm('{{.}}')">
+                  <a href="#" class="btn" data-dismiss="modal" onclick="updateBar('{{.}}', 0)">Close</a>
                 </div>
               </div>
             </form>
@@ -77,5 +69,50 @@
     <script src="js/bootstrap-collapse.js"></script>
     <script src="js/bootstrap-transition.js"></script>
     <script src="js/bootstrap-modal.js"></script>
+    <script>
+      var getError = function (msg) {
+        return '<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><h4 class="alert-heading">Error!</h4>' + msg + '</div>'
+      };
+      var updateBar = function (id, val) {
+        var bar = $('#' + id + 'bar');
+        bar.css('width', val + '%');
+      };
+      var uploadForm = function (id) {
+        var form = document.getElementById(id + "form");
+        var req = new XMLHttpRequest();
+        var data = new FormData(form);
+
+        //Event handlers
+        var updateProgress = function (e) {
+          var percent = e.position * 100 / e.totalSize;
+          updateBar(id, percent);
+        };
+        var transferComplete = function (e) {
+          console.log(req);
+          console.log(req.responseText);
+          var result = JSON.parse(req.responseText);
+          if (result.error) {
+            form.append(getError('Uploading failed! ' + result.error));
+          } else {
+            var url = result.success;
+            console.log(url);
+            document.location = url;
+          }
+        };
+        var transferFailed = function (e) {
+          form.append(getError('Uploading failed!'));
+        };
+        var transferCancelled = function (e) {
+          form.append(getError('Uploading cancelled!'));
+        };
+
+        req.upload.addEventListener("progress", updateProgress, false);
+        req.upload.addEventListener("load", transferComplete, false);
+        req.upload.addEventListener("error", transferFailed, false);
+        req.upload.addEventListener("abort", transferCancelled, false);
+        req.open("POST", "/upload", true);
+        req.send(data);
+      };
+    </script>
   </body>
 </html>

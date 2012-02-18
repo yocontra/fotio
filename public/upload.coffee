@@ -23,7 +23,6 @@ module.exports = (req, res, next, config) ->
 
       addImage config, opt, (err, path) ->
         return res.end err if err?
-        console.log err, path
         return res.end "{'success': 'http://#{req.headers['host']}/view?id=#{basename(path)}'}"
   else
-    return res.end()
+    return res.end 'Invalid method'
