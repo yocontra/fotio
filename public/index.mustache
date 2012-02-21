@@ -41,6 +41,7 @@
                 </div>
                 <div class="modal-body">
                   <img src="demo/{{.}}.png"/>
+                  <div id="{{.}}msg"></div>
                   <input type="text" name="title" class="span12" placeholder="Description"/>
                   <input type="hidden" name="filter" value="{{.}}"/>
                   <input type="file" id="{{.}}fileInput" accept="image/*" class="fileInput" capture="camera" name="upload"/>
@@ -78,9 +79,11 @@
         bar.css('width', val + '%');
       };
       var uploadForm = function (id) {
-        var form = document.getElementById(id + "form");
+        var form = $("#" + id + "form");
+        var errorSpot = $("#" + id + "msg");
         var req = new XMLHttpRequest();
-        var data = new FormData(form);
+        var data = new FormData(document.getElementById(id + "form"));
+
 
         //Event handlers
         var updateProgress = function (e) {
@@ -88,29 +91,27 @@
           updateBar(id, percent);
         };
         var transferComplete = function (e) {
-          console.log(req);
-          console.log(req.responseText);
-          var result = JSON.parse(req.responseText);
+          var result = JSON.parse(this.responseText);
           if (result.error) {
-            form.append(getError('Uploading failed! ' + result.error));
+            errorSpot.html(getError('Uploading failed! ' + result.error));
           } else {
             var url = result.success;
-            console.log(url);
-            document.location = url;
+            document.location.href = url;
           }
         };
         var transferFailed = function (e) {
-          form.append(getError('Uploading failed!'));
+          errorSpot.html(getError('Uploading failed!'));
         };
         var transferCancelled = function (e) {
-          form.append(getError('Uploading cancelled!'));
+          errorSpot.html(getError('Uploading cancelled!'));
         };
 
         req.upload.addEventListener("progress", updateProgress, false);
-        req.upload.addEventListener("load", transferComplete, false);
         req.upload.addEventListener("error", transferFailed, false);
         req.upload.addEventListener("abort", transferCancelled, false);
-        req.open("POST", "/upload", true);
+        req.addEventListener("load", transferComplete, false);
+
+        req.open("POST", "/upload");
         req.send(data);
       };
     </script>

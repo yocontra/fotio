@@ -10,11 +10,11 @@ module.exports = (req, res, next, config) ->
     form.maxFieldsSize = config.get 'fileLimit'
 
     form.parse req, (err, fields, files) ->
-      return res.end "{'error': 'Error parsing file - #{err.message}'}" if err?
+      return res.end JSON.stringify error: "Error parsing file - #{err.message}" if err?
       {title, filter} = fields
       {path, mime, filename, length} = files.upload
-      return res.end "{'error': 'Missing fields'}" unless title and filter and mime and filename and length and path
-      return res.end "{'error': 'Invalid file'}" if mime.indexOf('image/') isnt 0
+      return res.end JSON.stringify error: 'Missing fields' unless title and filter and mime and filename and length and path
+      return res.end JSON.stringify error: "Invalid file" if mime.indexOf('image/') isnt 0
       opt =
         path: path
         ip: req.connection.remoteAddress
@@ -23,6 +23,6 @@ module.exports = (req, res, next, config) ->
 
       addImage config, opt, (err, path) ->
         return res.end err if err?
-        return res.end "{'success': 'http://#{req.headers['host']}/view?id=#{basename(path)}'}"
+        return res.end JSON.stringify success: "http://#{req.headers['host']}/view?id=#{basename(path)}"
   else
     return res.end 'Invalid method'
