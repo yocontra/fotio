@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/Contra/fotio.png)](http://travis-ci.org/Contra/fotio)
 ## Information
 
 <table>
